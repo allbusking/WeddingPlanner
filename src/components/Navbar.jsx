@@ -14,6 +14,7 @@ const navItems = [
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false)
   const [mobileOpen, setMobileOpen] = useState(false)
+  const [mobileOpenPath, setMobileOpenPath] = useState('')
   const { pathname } = useLocation()
 
   useEffect(() => {
@@ -22,13 +23,24 @@ export default function Navbar() {
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
-  // Close mobile drawer on route change
   useEffect(() => {
-    setMobileOpen(false)
     window.scrollTo(0, 0)
   }, [pathname])
 
   const isHome = pathname === '/'
+  const isMobileOpen = mobileOpen && mobileOpenPath === pathname
+  const openMobileMenu = () => {
+    setMobileOpenPath(pathname)
+    setMobileOpen(true)
+  }
+  const closeMobileMenu = () => setMobileOpen(false)
+  const toggleMobileMenu = () => {
+    if (isMobileOpen) {
+      closeMobileMenu()
+    } else {
+      openMobileMenu()
+    }
+  }
 
   const navClass = `navbar ${scrolled ? 'scrolled' : ''} ${isHome ? 'navbar-hero-mode' : ''}`
 
@@ -36,7 +48,7 @@ export default function Navbar() {
     <>
       <nav className={navClass} aria-label="Main navigation">
         <div className="container navbar-inner">
-          <Link to="/" className="navbar-logo" onClick={() => setMobileOpen(false)}>
+          <Link to="/" className="navbar-logo" onClick={closeMobileMenu}>
             The Event Originators
             <span>West Bengal's Premier Planners</span>
           </Link>
@@ -59,10 +71,10 @@ export default function Navbar() {
           </div>
 
           <button
-            className={`hamburger ${mobileOpen ? 'open' : ''}`}
-            onClick={() => setMobileOpen(!mobileOpen)}
+            className={`hamburger ${isMobileOpen ? 'open' : ''}`}
+            onClick={toggleMobileMenu}
             aria-label="Toggle menu"
-            aria-expanded={mobileOpen}
+            aria-expanded={isMobileOpen}
             style={{ color: isHome && !scrolled ? '#fff' : 'var(--text-body)' }}
           >
             <span /><span /><span />
@@ -71,10 +83,10 @@ export default function Navbar() {
       </nav>
 
       {/* Mobile Drawer */}
-      <div className={`mobile-drawer ${mobileOpen ? 'open' : ''}`} role="dialog" aria-label="Mobile navigation">
+      <div className={`mobile-drawer ${isMobileOpen ? 'open' : ''}`} role="dialog" aria-label="Mobile navigation">
         <button
           style={{ position: 'absolute', top: '1.5rem', right: '1.5rem', fontSize: '1.5rem', color: 'var(--text-body)', background: 'none', border: 'none', cursor: 'pointer' }}
-          onClick={() => setMobileOpen(false)}
+          onClick={closeMobileMenu}
           aria-label="Close menu"
         >✕</button>
         {navItems.map(item => (
@@ -82,7 +94,7 @@ export default function Navbar() {
             key={item.to}
             to={item.to}
             end={item.to === '/'}
-            onClick={() => setMobileOpen(false)}
+            onClick={closeMobileMenu}
           >
             {item.label}
           </NavLink>
@@ -90,7 +102,7 @@ export default function Navbar() {
         <Link
           to="/contact"
           className="btn btn-primary"
-          onClick={() => setMobileOpen(false)}
+          onClick={closeMobileMenu}
           style={{ marginTop: '1rem' }}
         >
           Book Now ✦
