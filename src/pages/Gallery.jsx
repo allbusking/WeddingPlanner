@@ -257,9 +257,9 @@ export default function Gallery() {
   return (
     <main style={{ paddingTop: '80px' }}>
       {/* Hero */}
-      <section className="page-hero" aria-label="Gallery page hero">
+      <section className="page-hero gallery-page-hero" aria-label="Gallery page hero">
         <div className="container">
-          <span className="text-script">Visual Stories</span>
+          {/* <span className="text-script">Visual Stories</span> */}
           <h1>A Gallery of<br />Unforgettable Moments</h1>
           <div className="gold-divider" />
           <p>Each frame tells a story of love, joy, and the extraordinary details that made it real.</p>
