@@ -19,15 +19,18 @@ export default function Navbar() {
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 40)
+    onScroll()
     window.addEventListener('scroll', onScroll)
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
   useEffect(() => {
     window.scrollTo(0, 0)
+    setScrolled(false)
   }, [pathname])
 
   const isHome = pathname === '/'
+  const isSolidNav = scrolled || !isHome
   const isMobileOpen = mobileOpen && mobileOpenPath === pathname
   const openMobileMenu = () => {
     setMobileOpenPath(pathname)
@@ -42,7 +45,7 @@ export default function Navbar() {
     }
   }
 
-  const navClass = `navbar ${scrolled ? 'scrolled' : ''} ${isHome ? 'navbar-hero-mode' : ''}`
+  const navClass = `navbar ${isSolidNav ? 'scrolled' : ''} ${isHome ? 'navbar-hero-mode' : ''}`
 
   return (
     <>
@@ -75,7 +78,7 @@ export default function Navbar() {
             onClick={toggleMobileMenu}
             aria-label="Toggle menu"
             aria-expanded={isMobileOpen}
-            style={{ color: isHome && !scrolled ? '#fff' : 'var(--text-body)' }}
+            style={{ color: isHome && !isSolidNav ? '#fff' : 'var(--text-body)' }}
           >
             <span /><span /><span />
           </button>
